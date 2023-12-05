@@ -104,4 +104,48 @@ namespace sorting {
 		return QuickSort(vec, 0, vec.size() - 1);
 	}
 
+	template <typename T>
+	void Heapify(vector<T>& vec, int size, int i, stats& statistics) {
+		int max = i;
+		int left = 2 * i + 1;
+		int right = 2 * i + 2;
+		if (left < size) {
+			statistics.comparison_count++;
+			if (vec[left] > vec[max]) {
+				max = left;
+			}
+		}
+
+		if (right < size) {
+			statistics.comparison_count++;
+			if (vec[right] > vec[max]) {
+				max = right;
+			}
+		}
+
+		if (max != i) {
+			custom_swap(vec[i], vec[max]);
+			//statistics.copy_count += 3;???
+			statistics.copy_count += 2;//???
+			Heapify(vec, size, max, statistics);
+		}
+	}
+
+	template <typename T>
+	stats& HeapSort(vector<T>& vec) {
+		stats statistics;
+		int size = vec.size();
+		for (int i = size / 2 - 1; i >= 0; i--) {
+			Heapify(vec, size, i, statistics);
+		}
+
+		for (int i = size - 1; i >= 0; i--) {
+			custom_swap(vec[0], vec[i]);
+			//statistics.copy_count += 3;???
+			statistics.copy_count += 2;//???
+			Heapify(vec, i, 0, statistics);
+		}
+		return statistics;
+	}
+
 };
