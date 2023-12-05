@@ -58,4 +58,50 @@ namespace sorting {
 		return statistics;
 	}
 
+	template <typename T>
+	stats& QuickSort(vector<T>& vec, int start, int end) {
+		stats statistics;
+
+		int i = start;
+		int j = end;
+		T middle = vec[(start + end) / 2];
+
+		do {
+			while (vec[i] < middle) {
+				i++;
+				statistics.comparison_count++;
+			}
+			while (vec[j] > middle) {
+				j--;
+				statistics.comparison_count++;
+			}
+
+			if (i <= j) {
+				custom_swap(vec[i], vec[j]);
+				i++;
+				j--;
+				//statistics.copy_count += 3;???
+				statistics.copy_count += 2;//???
+			}
+		} while (i <= j);
+
+		if (j > start) {
+			stats left_statistics = QuickSort(vec, start, j);
+			statistics.comparison_count += left_statistics.comparison_count;
+			statistics.copy_count += left_statistics.copy_count;
+		}
+		if (i < end) {
+			stats right_statistics = QuickSort(vec, i, end);
+			statistics.comparison_count += right_statistics.comparison_count;
+			statistics.copy_count += right_statistics.copy_count;
+		}
+
+		return statistics;
+	}
+
+	template <typename T>
+	stats& QuickSort(vector<T>& vec) {
+		return QuickSort(vec, 0, vec.size() - 1);
+	}
+
 };
